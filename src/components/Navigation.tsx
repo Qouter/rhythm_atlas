@@ -8,6 +8,7 @@ const navItems = [
   { href: "/ritmos/clave", label: "Clave" },
   { href: "/ritmos/flamenco", label: "Flamenco" },
   { href: "/comparador", label: "Comparador" },
+  { href: "/laboratorio", label: "Laboratorio" },
 ];
 
 export function Navigation() {
