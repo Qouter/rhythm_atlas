@@ -1,26 +1,129 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* 
+ * Rhythms Atlas — Design System
+ * Following Impeccable guidelines:
+ * - Fraunces (display) + Plus Jakarta Sans (body)
+ * - OKLCH color palette: tierra, ocre, terracota, índigo
+ * - 4pt spacing system
+ * - No AI clichés (no purple gradients, no glassmorphism, no Inter)
+ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', Consolas, monospace;
+
+  /* Color Palette - OKLCH for perceptual uniformity */
+  /* Neutrals - warm tinted (not pure gray) */
+  --color-bg: oklch(96% 0.01 60);
+  --color-surface: oklch(99% 0.005 60);
+  --color-text: oklch(25% 0.02 60);
+  --color-text-secondary: oklch(45% 0.015 60);
+  --color-text-muted: oklch(60% 0.01 60);
+  --color-border: oklch(90% 0.01 60);
+  --color-border-subtle: oklch(93% 0.005 60);
+  
+  /* Cuba - terracota/warm */
+  --color-cuba: oklch(50% 0.14 30);
+  --color-cuba-light: oklch(92% 0.04 30);
+  --color-cuba-dark: oklch(35% 0.12 30);
+  
+  /* Spain - deep red/burgundy */
+  --color-spain: oklch(40% 0.15 15);
+  --color-spain-light: oklch(92% 0.04 15);
+  --color-spain-dark: oklch(28% 0.12 15);
+  
+  /* Shared/connections - gold/ochre */
+  --color-shared: oklch(70% 0.15 85);
+  --color-shared-light: oklch(95% 0.05 85);
+  
+  /* Accent - índigo */
+  --color-indigo: oklch(40% 0.15 260);
+  --color-indigo-light: oklch(92% 0.03 260);
+  
+  /* Silence/empty beats */
+  --color-silence: oklch(92% 0.005 60);
+  
+  /* Spacing - 4pt base system */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  
+  /* Motion - exponential ease (Impeccable recommendation) */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base styles */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography scale - fluid for headings, fixed for body (Impeccable) */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-weight: 300;
+  font-size: clamp(2.5rem, 5vw + 1rem, 4rem);
+  line-height: 1.1;
+}
+
+h2 {
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw + 0.5rem, 2.25rem);
+}
+
+h3 {
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+/* Small caps for labels */
+.label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+}
+
+/* Monospace for notation */
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus states (Impeccable: always visible, accessible) */
+:focus-visible {
+  outline: 2px solid var(--color-cuba);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-cuba-light);
+  color: var(--color-cuba-dark);
 }
