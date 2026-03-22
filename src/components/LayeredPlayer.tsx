@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { RhythmPreset, RhythmLayer } from "@/lib/rhythmPatterns";
+import { playInstrument, initAudio } from "@/lib/instruments";
 
 interface LayeredPlayerProps {
   preset: RhythmPreset;
@@ -9,23 +10,12 @@ interface LayeredPlayerProps {
   presetOptions?: { id: string; name: string; origin: string }[];
 }
 
-// Sound synthesis parameters for each instrument
-const instrumentParams: Record<string, { freq: number; type: OscillatorType; decay: number; gain: number }> = {
-  clave: { freq: 2500, type: "sine", decay: 0.05, gain: 0.4 },
-  conga: { freq: 200, type: "triangle", decay: 0.15, gain: 0.5 },
-  bass: { freq: 80, type: "sine", decay: 0.3, gain: 0.6 },
-  bell: { freq: 800, type: "square", decay: 0.1, gain: 0.25 },
-  palmas: { freq: 1800, type: "sine", decay: 0.04, gain: 0.35 },
-  cajon: { freq: 120, type: "triangle", decay: 0.2, gain: 0.55 },
-};
-
 export function LayeredPlayer({ preset, onPresetChange, presetOptions }: LayeredPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [layers, setLayers] = useState<RhythmLayer[]>(preset.layers);
   const [tempo, setTempo] = useState(preset.tempo);
   
-  const audioCtxRef = useRef<AudioContext | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const beatRef = useRef(0);
   
@@ -38,31 +28,6 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
     }
   }, [preset]);
 
-  const playSound = useCallback((instrument: string, velocity: number) => {
-    if (!audioCtxRef.current) return;
-    
-    const ctx = audioCtxRef.current;
-    const params = instrumentParams[instrument];
-    if (!params) return;
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    
-    // Vary frequency slightly based on velocity for expression
-    osc.frequency.value = params.freq * (0.9 + velocity * 0.2);
-    osc.type = params.type;
-    
-    const vol = params.gain * velocity;
-    gain.gain.setValueAtTime(vol, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + params.decay);
-    
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + params.decay);
-  }, []);
-
   const tick = useCallback(() => {
     const beat = beatRef.current;
     setCurrentBeat(beat);
@@ -70,17 +35,19 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
     // Play each unmuted layer
     layers.forEach(layer => {
       if (!layer.muted && layer.pattern[beat] > 0) {
-        playSound(layer.instrument, layer.pattern[beat]);
+        const velocity = layer.pattern[beat];
+        // Determine if it's a slap based on velocity
+        const isSlap = velocity > 0.75;
+        playInstrument(layer.instrument, velocity, { isSlap });
       }
     });
     
     beatRef.current = (beat + 1) % preset.gridSize;
-  }, [layers, preset.gridSize, playSound]);
+  }, [layers, preset.gridSize]);
 
   const play = useCallback(() => {
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new AudioContext();
-    }
+    // Initialize audio system
+    initAudio();
     
     setIsPlaying(true);
     beatRef.current = 0;
@@ -195,7 +162,7 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
             
             {/* Layer name */}
             <span 
-              className="w-32 text-sm font-medium"
+              className="w-36 text-sm font-medium"
               style={{ 
                 color: layer.muted ? "var(--color-text-muted)" : "var(--color-text)",
               }}
@@ -208,7 +175,7 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
               {layer.pattern.map((hit, i) => (
                 <div
                   key={i}
-                  className="h-6 flex-1 rounded-sm transition-all duration-75"
+                  className="h-8 flex-1 rounded-sm transition-all duration-75"
                   style={{
                     background: hit > 0 
                       ? layer.muted 
@@ -216,9 +183,9 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
                         : layer.color
                       : "var(--color-bg)",
                     opacity: hit > 0 ? (layer.muted ? 0.3 : 0.3 + hit * 0.7) : 1,
-                    transform: currentBeat === i ? "scaleY(1.3)" : "scaleY(1)",
+                    transform: currentBeat === i ? "scaleY(1.4)" : "scaleY(1)",
                     boxShadow: currentBeat === i && hit > 0 && !layer.muted
-                      ? `0 0 8px ${layer.color}`
+                      ? `0 0 12px ${layer.color}`
                       : "none",
                   }}
                 />
@@ -229,12 +196,12 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
       </div>
 
       {/* Transport controls */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 flex-wrap">
         <button
           onClick={isPlaying ? stop : play}
           className="px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2"
           style={{
-            background: "var(--color-cuba)",
+            background: preset.origin === "Cuba" ? "var(--color-cuba)" : "var(--color-spain)",
             color: "white",
           }}
         >
@@ -242,7 +209,7 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
         </button>
         
         {/* Tempo control */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <span 
             className="text-sm"
             style={{ color: "var(--color-text-muted)" }}
@@ -255,10 +222,11 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
             max={280}
             value={tempo}
             onChange={(e) => setTempo(Number(e.target.value))}
-            className="w-24"
+            className="w-32 accent-current"
+            style={{ accentColor: preset.origin === "Cuba" ? "var(--color-cuba)" : "var(--color-spain)" }}
           />
           <span 
-            className="text-sm w-16 font-mono"
+            className="text-sm w-20 font-mono"
             style={{ color: "var(--color-text-secondary)" }}
           >
             {tempo} BPM
@@ -271,8 +239,8 @@ export function LayeredPlayer({ preset, onPresetChange, presetOptions }: Layered
         className="text-xs mt-4"
         style={{ color: "var(--color-text-muted)" }}
       >
-        Haz click en ON/OFF para activar o silenciar cada capa. 
-        Escucha cómo cada instrumento contribuye al groove completo.
+        💡 Click en ON/OFF para activar o silenciar cada capa. 
+        Las barras más altas indican golpes más fuertes.
       </p>
     </div>
   );
