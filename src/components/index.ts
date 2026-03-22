@@ -5,3 +5,5 @@ export { ContextCard } from "./ContextCard";
 export { Hypothesis } from "./Hypothesis";
 export { ConnectionTag } from "./ConnectionTag";
 export { LayeredPlayer } from "./LayeredPlayer";
+export { Globe } from "./Globe";
+export { LocationPanel } from "./LocationPanel";
