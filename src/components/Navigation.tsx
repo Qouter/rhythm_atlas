@@ -7,7 +7,6 @@ const navItems = [
   { href: "/", label: "Inicio" },
   { href: "/explorar", label: "Explorar" },
   { href: "/laboratorio", label: "Laboratorio" },
-  { href: "/mapa", label: "Mapa" },
   { href: "/comparador", label: "Comparador" },
 ];
 
@@ -30,7 +29,7 @@ export function Navigation() {
           style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
         >
           <span className="text-xl">🥁</span>
-          <span className="font-medium text-lg tracking-tight">Rhythms Atlas</span>
+          <span className="font-medium text-lg tracking-tight hidden sm:inline">Rhythms Atlas</span>
         </Link>
 
         {/* Nav links */}
@@ -43,7 +42,7 @@ export function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                className="px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all"
                 style={{
                   color: isActive ? "var(--color-cuba)" : "var(--color-text-secondary)",
                   background: isActive ? "var(--color-cuba-light)" : "transparent",
