@@ -8,3 +8,4 @@ export { LayeredPlayer } from "./LayeredPlayer";
 export { Globe } from "./Globe";
 export { LocationPanel } from "./LocationPanel";
 export { GlobeSearch } from "./GlobeSearch";
+export { GlobeTimeline } from "./GlobeTimeline";
