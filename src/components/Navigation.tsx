@@ -5,11 +5,10 @@ import { usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/", label: "Inicio" },
-  { href: "/ritmos/clave", label: "Clave" },
-  { href: "/ritmos/flamenco", label: "Flamenco" },
-  { href: "/comparador", label: "Comparador" },
+  { href: "/explorar", label: "Explorar" },
   { href: "/laboratorio", label: "Laboratorio" },
   { href: "/mapa", label: "Mapa" },
+  { href: "/comparador", label: "Comparador" },
 ];
 
 export function Navigation() {
