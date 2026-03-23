@@ -3,52 +3,33 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
-      {/* Hero with Globe Search */}
-      <section 
-        className="relative"
-        style={{ background: "var(--color-bg)" }}
-      >
-        {/* Title overlay */}
-        <div className="absolute top-20 left-0 right-0 z-10 text-center pointer-events-none">
-          <h1 
-            className="text-5xl md:text-6xl mb-2 opacity-90"
-            style={{ 
-              fontFamily: "var(--font-fraunces), Georgia, serif",
-              color: "var(--color-text)",
-            }}
-          >
-            Rhythms Atlas
-          </h1>
-          <p 
-            className="text-lg opacity-70"
-            style={{ color: "var(--color-text-secondary)" }}
-          >
-            Las rutas del ritmo a través de la historia
-          </p>
-        </div>
-
-        <GlobeSearch />
-      </section>
+    <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
+      {/* Main: Globe Search */}
+      <GlobeSearch />
 
       {/* Quick links */}
       <section 
-        className="px-6 py-12"
+        className="px-6 py-16"
         style={{ background: "var(--color-surface)" }}
       >
         <div className="max-w-4xl mx-auto">
-          <div className="grid sm:grid-cols-3 gap-4">
+          <h2 
+            className="text-2xl mb-8 text-center"
+            style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
+          >
+            Herramientas
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-6">
             <Link
               href="/laboratorio"
               className="p-6 rounded-xl transition-all hover:translate-y-[-2px]"
               style={{ 
                 background: "var(--color-bg)",
-                border: "1px solid var(--color-border-subtle)",
               }}
             >
-              <span className="text-2xl mb-2 block">🎹</span>
+              <span className="text-3xl mb-3 block">🎹</span>
               <h3 
-                className="font-medium mb-1"
+                className="text-lg font-medium mb-1"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
                 Laboratorio
@@ -57,7 +38,7 @@ export default function Home() {
                 className="text-sm"
                 style={{ color: "var(--color-text-secondary)" }}
               >
-                Escucha las capas de cada ritmo
+                Escucha las capas de cada ritmo. Activa y desactiva instrumentos.
               </p>
             </Link>
 
@@ -66,12 +47,11 @@ export default function Home() {
               className="p-6 rounded-xl transition-all hover:translate-y-[-2px]"
               style={{ 
                 background: "var(--color-bg)",
-                border: "1px solid var(--color-border-subtle)",
               }}
             >
-              <span className="text-2xl mb-2 block">⚖️</span>
+              <span className="text-3xl mb-3 block">⚖️</span>
               <h3 
-                className="font-medium mb-1"
+                className="text-lg font-medium mb-1"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
                 Comparador
@@ -80,7 +60,7 @@ export default function Home() {
                 className="text-sm"
                 style={{ color: "var(--color-text-secondary)" }}
               >
-                Clave vs Flamenco lado a lado
+                Clave vs Flamenco lado a lado. Encuentra los paralelos.
               </p>
             </Link>
 
@@ -89,12 +69,11 @@ export default function Home() {
               className="p-6 rounded-xl transition-all hover:translate-y-[-2px]"
               style={{ 
                 background: "var(--color-bg)",
-                border: "1px solid var(--color-border-subtle)",
               }}
             >
-              <span className="text-2xl mb-2 block">📚</span>
+              <span className="text-3xl mb-3 block">📚</span>
               <h3 
-                className="font-medium mb-1"
+                className="text-lg font-medium mb-1"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
                 Explorar
@@ -103,7 +82,7 @@ export default function Home() {
                 className="text-sm"
                 style={{ color: "var(--color-text-secondary)" }}
               >
-                Todos los ritmos con filtros
+                Todos los ritmos con filtros avanzados por período y función.
               </p>
             </Link>
           </div>
@@ -123,10 +102,12 @@ export default function Home() {
             className="text-lg leading-relaxed"
             style={{ color: "var(--color-text-secondary)" }}
           >
-            Los ritmos no son abstractos — nacen de <strong style={{ color: "var(--color-text)" }}>condiciones materiales</strong>. 
-            La síncopa de la clave cubana, el compás flamenco, el dembow del reggaetón... 
-            cada uno cuenta una historia de <strong style={{ color: "var(--color-text)" }}>resistencia</strong>, 
-            migración y transformación cultural.
+            Los ritmos no son abstractos — nacen de{" "}
+            <strong style={{ color: "var(--color-text)" }}>condiciones materiales</strong>. 
+            La síncopa de la clave cubana, el compás flamenco, el dembow... 
+            cada uno cuenta una historia de{" "}
+            <strong style={{ color: "var(--color-text)" }}>resistencia</strong>, 
+            migración y transformación.
           </p>
         </div>
       </section>
@@ -139,7 +120,7 @@ export default function Home() {
           color: "var(--color-text-muted)",
         }}
       >
-        Rhythms Atlas — Conectando ritmos con su historia · 2026
+        Rhythms Atlas — 2026
       </footer>
     </div>
   );
